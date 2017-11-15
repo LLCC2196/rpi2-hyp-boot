@@ -1,23 +1,3 @@
-/* rpi2-hyp-boot.S - RRi 2 bootloader for starting in HYP mode  */
-
-/*
- * Copyright (c) 2015 Sergio L. Pascual <slp@sinrega.org>
- * Copyright (c) 2013 Andre Przywara <andre.przywara@linaro.org>
- * All rights reserved.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 
 #define HYP_MODE        0x1a
 #define T_BIT           0x20
@@ -30,10 +10,10 @@
 
 .section .init
 .globl _start
-/* the vector table for secure state and HYP mode */
+
 _start:
-	b jmp_loader 	/* reset */
-	.word 0 /* undef */
+	b jmp_loader
+	.word 0
 	adr pc, _secure_monitor
 	.word 0
 	.word 0
@@ -41,13 +21,7 @@ _start:
 	.word 0
 	.word 0
 
-/*
- * secure monitor handler
- * U-boot calls this "software interrupt" in start.S
- * This is executed on a "smc" instruction, we use a "smc #0" to switch
- * to non-secure state.
- * We use only r0 and r1 here, due to constraints in the caller.
- */
+
 _secure_monitor:
 	mrc	p15, 0, r1, c1, c1, 0		@ read SCR
 	bic	r1, r1, #0x4e			@ clear IRQ, FIQ, EA, nET bits
